@@ -1,6 +1,6 @@
 const mongoose=require('mongoose');
 mongoose.connect("mongodb+srv://adityaa32078:nCjVrWxfFXatvJeK@cluster08.4gc3o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster08");
-//defining user model schema
+
 const userSchema=new mongoose.Schema({
     userName:{
         type:String,

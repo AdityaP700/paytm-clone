@@ -1,9 +1,8 @@
-const express=require('express');
+const express = require('express');
 const router=express.Router();
 const userRouter= require('./user');
 const accountRouter=require('./accounts');
 router.use("/user",userRouter);
 router.use("/account",accountRouter);
-// /api/v1/transaction...
 module.exports=router;
 
