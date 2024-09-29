@@ -34,23 +34,22 @@ router.put("/", authMiddleware, async (req, res) => {
 router.post("/signup", async (req, res) => {
     const validation = signupBody.safeParse(req.body);
     if (!validation.success) {
-        return res.status(400).json({
+        return res.status(401).json({
             message: "Validation error",
             errors: validation.error.errors 
         });
     }
-    
     const existingUser = await User.findOne({ userName: req.body.userName });
     if (existingUser) {
-        return res.status(400).json({
-            message: "User already exists" // Message is fine as is
+        return res.status(404).json({
+            message: "User already exists" 
         });
     }
     const newUser = await User.create({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         userName: req.body.userName,
-        password: req.body.password, // Storing password as it is (in plain text)
+        password: req.body.password, 
     });
     const userid = newUser._id;
     await Account.create({
@@ -97,9 +96,9 @@ router.get("/bulk", async (req, res) => {
     });
     res.json({
         users: users.map(user => ({
-            userName: user.userName,
             firstName: user.firstName,
             lastName: user.lastName,
+            userName: user.userName,
             _id: user._id
         }))
     });

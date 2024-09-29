@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { Account } = require("../db");
 const { authMiddleware } = require('../middleware');
-const mongoose = require('mongoose'); // Make sure mongoose is required
-router.post("/transfer", authMiddleware, async (req, res) => {  // Swap req and res
+const mongoose = require('mongoose'); 
+router.post("/transfer", authMiddleware, async (req, res) => {  
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
@@ -16,17 +16,13 @@ router.post("/transfer", authMiddleware, async (req, res) => {  // Swap req and 
                 message: "Insufficient balance"
             });
         }
-
-        const toAccount = await Account.findOne({ userid: to }).session(session);  // Added await
-
+        const toAccount = await Account.findOne({ userid: to }).session(session);  
         if (!toAccount) {
             await session.abortTransaction();
             return res.status(400).json({
                 message: "Invalid Account"
             });
         }
-
-        // Update the sender's and receiver's account balances
         await Account.findOneAndUpdate({ userid: req.userid }, { $inc: { balance: -amount } }).session(session);
         await Account.findOneAndUpdate({ userid: to }, { $inc: { balance: amount } }).session(session);
 
@@ -44,8 +40,6 @@ router.post("/transfer", authMiddleware, async (req, res) => {  // Swap req and 
         session.endSession();
     }
 });
-
-// Balance route
 router.get("/balance", authMiddleware, async (req, res) => {  // Swap req and res
     const account = await Account.findOne({ userid: req.userid });
     
@@ -54,7 +48,6 @@ router.get("/balance", authMiddleware, async (req, res) => {  // Swap req and re
             message: "Account not found"
         });
     }
-
     res.json({
         balance: account.balance
     });

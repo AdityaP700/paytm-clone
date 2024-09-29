@@ -1,12 +1,15 @@
 import React from 'react';
+import Appbar from "../components/Appbar"
+import Balance from "../components/Balance"
+import Users from "../components/Users"
 
-const Dashboard = () => {
-    return (
-        <div>
-            {/* Your dashboard content here */}
-            <h1>Dashboard</h1>
+export const Dashboard=()=>{
+    return <div>
+        <Appbar/>
+        <div className="m-8">
+            <Balance label={"13,321"}/>
+            <Users/>
         </div>
-    );
-};
-
-export default Dashboard; // Ensure this line is present
+    </div>
+}
+export default Dashboard;

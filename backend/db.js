@@ -2,6 +2,16 @@ const mongoose=require('mongoose');
 mongoose.connect("mongodb+srv://adityaa32078:nCjVrWxfFXatvJeK@cluster08.4gc3o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster08");
 
 const userSchema=new mongoose.Schema({
+    firstName:{
+        type:String,
+        required:true,
+        maxLength:50
+    },
+    lastName:{
+        type:String,
+        required:true,
+        maxLength:50
+    },
     userName:{
         type:String,
         required:true,
@@ -11,27 +21,17 @@ const userSchema=new mongoose.Schema({
         maxLength:30,
         lowercase:true,
     },
-      password:{
+    password:{
         type:String,
         required:true,
         minLength:6,
         maxLength:30
     },
-    firstName:{
-    type:String,
-    required:true,
-    maxLength:50
-    },
-    lastName:{
-    type:String,
-    required:true,
-    maxLength:50
-    }
 });
 const accountSchema= new mongoose.Schema({
     userId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'User',//Taking references
+        ref:'User',
         required:true
     },
     balance:{

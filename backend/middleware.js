@@ -1,27 +1,23 @@
-// Exports middleware function 
-// Checks the headers 
-// Verifies the token
-// If not, returns a 401 status back to the user
-
-const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("./config");
+const jwt = require("jsonwebtoken");
 
-const authMiddleware = (req, res, next) => { 
-    console.log('Incoming headers:', req.headers);// Corrected parameter order
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer token
-    
-    if (token) {
-        jwt.verify(token, JWT_SECRET, (err, decoded) => { 
-            if (err) {
-                return res.status(401).send({ success: false, message: "Failed to authenticate user." }); // Changed to 401
-            } else {
-                req.userId = decoded.userid; 
-                next(); 
-            }
-        });
-    } else {
-        return res.status(401).send({ success: false, message: "No token Provided" }); // Changed to 401
+const authMiddleware = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        req.userId = decoded.userId; // Assuming your JWT payload has 'userId'
+
+        next();
+    } catch (err) {
+        return res.status(403).json({ message: "Invalid token" });
     }
 };
 
